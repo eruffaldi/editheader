@@ -1,3 +1,4 @@
+from __future__ import print_function
 # Edit Header for C/C++
 # Scan Files and Verify license for C/C++
 #
@@ -5,11 +6,11 @@
 #
 # Usage:
 # - select files using a combination of find/grep e.g.
-#   find . | grep -v buildosx | grep -v buildwin | grep -E ".*\.(cpp|hpp|h)$"
+#   find . | grep -v buildosx | grep -v buildwin | grep -E ".*\.(cpp|hpp|h|hxx|c)$"
 # - verify used headers or per-file
 # 	python editheader.py --filelist FILELIST --all --listlicenses
 # 	python editheader.py --filelist FILELIST --all --list
-# - regenerate all
+# - regenerate all with the MYLICENSE file
 # 	python editheader.py --filelist FILELIST --all --replace MYLICENSE
 # - replace license
 import argparse
@@ -101,7 +102,7 @@ def main():
 	parser.add_argument('--all', help="select all files, otherwise only ones with marker present or empty license",action="store_true")
 	#parser.add_argument('--selecttopragma', help="removes license froms elected files",action="store_true")
 	parser.add_argument('--remove', help="Removes All licenses",action="store_true")
-	parser.add_argument('--test', help="Test Mode, does nothing",action="store_true")
+	parser.add_argument('--dry-run', help="Test Mode, does nothing",action="store_true")
 	parser.add_argument('--replace', help="Replace all licenses with new file")
 	parser.add_argument('--special', help="eat everything",action="store_true")
 	parser.add_argument('--new', help="Instead of replacing files produce a file with appended .new",action="store_true")
@@ -129,24 +130,24 @@ def main():
 
 	if args.listnames:
 		for f,l in wfiles:
-			print f
+			print (f)
 	elif args.list:
 		for f,l in wfiles:
 			(doublemode,hasmarker,e,lines) = l
-			print bcolors.OKGREEN,f,bcolors.ENDC
-			print "\tdoublemode",doublemode
-			print "\thasmarker",hasmarker
-			print "\tendline",e
-			print "\tlines",lines
+			print (bcolors.OKGREEN,f,bcolors.ENDC)
+			print ("\tdoublemode",doublemode)
+			print ("\thasmarker",hasmarker)
+			print ("\tendline",e)
+			print ("\tlines",lines)
 	elif args.listlicenses:
 		ll = defaultdict(list)
 		for f,l in wfiles:
 			(doublemode,hasmarker,e,lines) = l
 			ll[tuple(lines)].append(f)
 		for k,v in ll.iteritems():
-			print k
+			print (k)
 			for y in v:
-				print "\t",y
+				print ("\t",y)
 	elif newlicense is not None:
 		if len(newlicense) != 0:
 			a = ["/**"]
@@ -165,17 +166,17 @@ def main():
 			pre = w[0:e]
 			post = w[e:]
 			if not args.regen and newlicense == existing:
-				print "same",f
+				print ("same",f)
 			else:
 				if args.regen:
 					newlicenseblock = existing
 				tf = (args.new and f+".new" or f)
-				if not args.test:
-					print "updating",f,len(newlicenseblock),"post",len(post)
+				if not args.dry_run:
+					print ("updating",f,len(newlicenseblock),"post",len(post))
 					open(tf,"w").write("\n".join(newlicenseblock + post))
 				else:
-					print "test updating",tf,"newlicenselines",len(newlicenseblock),"from",e,"bodylines",len(post)
+					print ("test updating",tf,"newlicenselines",len(newlicenseblock),"from",e,"bodylines",len(post))
 	else:
-		print "no action"
+		print ("no action")
 if __name__ == '__main__':
 	main()
