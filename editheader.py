@@ -90,7 +90,7 @@ def extractlicense(filename,args):
 	return (doublemode,hasmarker,e,lines)
 
 def main():
-	parser = argparse.ArgumentParser(description='List and modify licenses')
+	parser = argparse.ArgumentParser(description='List and modify licenses of C/C++ files')
 	parser.add_argument('paths', metavar='paths', type=str, nargs='*',
 	                   help='list of files')
 	parser.add_argument('--filelist', help="takes files from this list instead from path")
@@ -98,7 +98,7 @@ def main():
 	parser.add_argument('--listlicenses', action='store_true',help="list licenses with related files")
 	parser.add_argument('--listnames', action='store_true',help="list filenames only")
 	#parser.add_argument('--exclude',type=str,nargs='*',help="relative paths to be excluded")
-	parser.add_argument('--marker', help="marker used at the end of the first block comment",default="--")	
+	parser.add_argument('--marker', help="marker used at the end of the first block comment to separate license from rest",default="--")	
 	parser.add_argument('--all', help="select all files, otherwise only ones with marker present or empty license",action="store_true")
 	#parser.add_argument('--selecttopragma', help="removes license froms elected files",action="store_true")
 	parser.add_argument('--remove', help="Removes All licenses",action="store_true")
